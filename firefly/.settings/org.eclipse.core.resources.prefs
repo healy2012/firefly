@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+encoding//custom/appmain.py=utf8
+encoding//custom/startmaster.py=utf8
+encoding//firefly/distributed/node.py=utf8
+encoding//firefly/master/master.py=utf8
+encoding//firefly/server/server.py=utf8

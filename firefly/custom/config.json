@@ -1,0 +1,44 @@
+{
+"master":{"rootport":8888,"webport":7777},
+"servers":{
+	"gate":{
+		"rootport":11111,
+		"name":"gate",
+		"app":"app.gateapp",
+		"db":true,
+		"mem":true,
+		"log":"app/logs/gate.log"
+	},
+	"net":{"netport":22222,
+		"remoteport":[{"rootport":11111,"rootname":"gate"}],
+		"name":"net",
+		"app":"app.netapp",
+		"log":"app/logs/net.log"
+	},
+	"game":{
+		"remoteport":[{"rootport":11111,"rootname":"gate"}],
+		"name":"game",
+		"app":"app.gameapp",
+		"log":"app/logs/game.log"
+	},
+	"data":{
+		"name":"data",
+		"app":"app.dataapp",
+		"db":true,
+		"mem":true,
+		"log":"app/logs/data.log"
+	}
+},
+"db":{
+"host":"127.0.0.1",
+"user":"root",
+"passwd":"emag",
+"port":3306,
+"db":"mzdemo",
+"charset":"utf8"
+},
+"memcached":{
+	"urls":["192.168.167.93:11211"],
+	"hostname":"mzdemo"
+}
+}
