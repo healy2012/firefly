@@ -60,34 +60,49 @@ class FFServer:
         cpuid = config.get('cpu')#绑定cpu
         mreload = config.get('reload')#重新加载模块名称
         self.servername = servername
+        
+        if logpath:
+            log.addObserver(loogoo(logpath))#日志处理
+        log.startLogging(sys.stdout)
+        
         if masterconf:
+            log.msg("start in masterconf")
             masterport = masterconf.get('rootport')
             masterhost = masterconf.get('roothost')
             self.master_remote = RemoteObject(servername)
             addr = ('localhost',masterport) if not masterhost else (masterhost,masterport)
             self.master_remote.connect(addr)
             GlobalObject().masterremote = self.master_remote
+            print "end in masterconf"
             
         if netport:
+            print "start in netport"
             self.netfactory = LiberateFactory()
             netservice = services.CommandService("netservice")
             self.netfactory.addServiceChannel(netservice)
             reactor.listenTCP(netport,self.netfactory)
+            print "end in netport"
             
         if webport:
+            print "start in webport"
             self.webroot = vhost.NameVirtualHost()
             GlobalObject().webroot = self.webroot
             reactor.listenTCP(webport, DelaySite(self.webroot))
+            print "end in webport"
             
         if rootport:
+            print "start in rootport"
             self.root = PBRoot()
             rootservice = services.Service("rootservice")
             self.root.addServiceChannel(rootservice)
             reactor.listenTCP(rootport, BilateralFactory(self.root))
+            print "end in rootport"
             
-        for cnf in self.remoteportlist:
+        for cnf in self.remoteportlist:           
             rname = cnf.get('rootname')
+            print "start in remoteportlist"+rname
             self.remote[rname] = RemoteObject(self.servername)
+            print "end in remoteportlist"+rname
             
         if hasdb and dbconfig:
             log.msg(str(dbconfig))
@@ -98,9 +113,7 @@ class FFServer:
             hostname = str(memconfig.get('hostname'))
             mclient.connect(urls, hostname)
             
-        if logpath:
-            log.addObserver(loogoo(logpath))#日志处理
-        log.startLogging(sys.stdout)
+        
         
         if cpuid:
             affinity.set_process_affinity_mask(os.getpid(), cpuid)
@@ -117,6 +130,7 @@ class FFServer:
     def remote_connect(self, rname, rhost):
         """
         """
+        print "in remote_connect:" + rname+"|" + rhost
         for cnf in self.remoteportlist:
             _rname = cnf.get('rootname')
             if rname == _rname:
@@ -127,6 +141,7 @@ class FFServer:
                     addr = (rhost,rport)
                 self.remote[rname].connect(addr)
                 break
+        print "end in remote_connect"
         
     def start(self):
         '''启动服务器

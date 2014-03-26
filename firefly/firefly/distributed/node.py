@@ -13,7 +13,7 @@ def callRemote(obj,funcName,*args,**kw):
     '''远程调用
     @param funcName: str 远程方法
     '''
-    print "Test in callRemote"
+    print "Test in callRemote",funcName
     return obj.callRemote(funcName, *args,**kw)
     
     
